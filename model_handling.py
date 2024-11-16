@@ -8,7 +8,8 @@ import os
 #third-party imports
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BatchEncoding, TextStreamer
-import vllm
+if os.name != 'nt':
+    import vllm
 
 class LLM(ABC):
     '''Abstract Base Class for LLM'''
