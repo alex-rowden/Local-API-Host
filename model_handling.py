@@ -7,7 +7,12 @@ import json
 import os
 #third-party imports
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, BatchEncoding, TextStreamer
+from transformers import (AutoModelForCausalLM,
+    AutoTokenizer,
+    BatchEncoding,
+    TextStreamer,
+    BitsAndBytesConfig,
+)
 if os.name != 'nt':
     import vllm
 
@@ -29,12 +34,17 @@ class HFLLM(LLM):
     def __init__(self, model_name: str, device_map: str = "auto",
                  torch_dtype: torch.dtype = torch.float16) -> None:
         '''Initialization function for Generic LLM Class to setup a CausalLM model and tokenizer'''
+        bnb_config: BitsAndBytesConfig = BitsAndBytesConfig(
+            load_in_4bit=True,
+        )
 
         self.tokenizer: AutoTokenizer= AutoTokenizer.from_pretrained(model_name)
         self.model: AutoModelForCausalLM = AutoModelForCausalLM.from_pretrained(
             model_name,
             device_map = device_map,
-            torch_dtype = torch_dtype
+            torch_dtype = torch_dtype,
+            trust_remote_code = True,
+            quantization_config = bnb_config
         )
     def generate_text(self, message_chain: List[Dict[str, str]],
                     max_new_tokens : int = 4098,
