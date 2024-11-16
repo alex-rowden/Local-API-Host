@@ -1,5 +1,6 @@
 {
     "python.analysis.inlayHints.functionReturnTypes": true,
     "python.analysis.inlayHints.variableTypes": true,
+    "python.pythonPath": "${workspaceFolder}\\venv\\bin\\python",
     "python.linting.pylintPath": "${workspaceFolder}\\venv\\bin\\pylint",
 }
