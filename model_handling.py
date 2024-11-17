@@ -18,6 +18,9 @@ if os.name != 'nt':
 
 class LLM(ABC):
     '''Abstract Base Class for LLM'''
+    eos_token: str = "<\/s>"
+    pad_token: str = "<pad>""
+    padding_side: str = "right"
     @abstractmethod
     def __init__(self, model_name: str, device_map: str = "auto",
                 torch_dtype: torch.dtype = torch.float16) -> None:
@@ -38,7 +41,13 @@ class HFLLM(LLM):
             load_in_4bit=True,
         )
 
-        self.tokenizer: AutoTokenizer= AutoTokenizer.from_pretrained(model_name)
+        self.tokenizer: AutoTokenizer= AutoTokenizer.from_pretrained(model_name,
+            eos_token = self.eos_token,
+            pad_token = self.pad_token,
+            padding_side = self.padding_side,
+            use_fast = True
+        )
+
         self.model: AutoModelForCausalLM = AutoModelForCausalLM.from_pretrained(
             model_name,
             device_map = device_map,
@@ -71,8 +80,8 @@ class HFLLM(LLM):
         input_ids: torch.Tensor = inputs.to(self.model.device)
         streamer: TextStreamer = TextStreamer(
             self.tokenizer,
-            skip_prompt=False,
-            skip_special_tokens=True)
+            skip_prompt=True,
+            skip_special_tokens=False)
 
         outputs: torch.Tensor = self.model.generate(
             **input_ids,
@@ -149,6 +158,8 @@ class ZephyrLLM(HFLLM):
     def __init__(self, **kwargs) -> None:
         '''Constructor for ZephyrLLM. Just calls the superclass constructor
         with the correct model name'''
+        if 'torch_dtype' not in kwargs: 
+            kwargs['torch_dtype'] = torch.bfloat16
         super().__init__("HuggingFaceH4/zephyr-7b-beta", **kwargs)
 
 
