@@ -18,8 +18,8 @@ if os.name != 'nt':
 
 class LLM(ABC):
     '''Abstract Base Class for LLM'''
-    eos_token: str = "<\/s>"
-    pad_token: str = "<pad>""
+    eos_token: str = r"</s>"
+    pad_token: str = "<pad>"
     padding_side: str = "right"
     @abstractmethod
     def __init__(self, model_name: str, device_map: str = "auto",
@@ -158,7 +158,7 @@ class ZephyrLLM(HFLLM):
     def __init__(self, **kwargs) -> None:
         '''Constructor for ZephyrLLM. Just calls the superclass constructor
         with the correct model name'''
-        if 'torch_dtype' not in kwargs: 
+        if 'torch_dtype' not in kwargs:
             kwargs['torch_dtype'] = torch.bfloat16
         super().__init__("HuggingFaceH4/zephyr-7b-beta", **kwargs)
 
@@ -173,19 +173,17 @@ if __name__ == "__main__":
         },
         {
             "role": "user",
-            "content": ("Help me create a character based on Michael from The Good Place. To"
-                        " elaborate. I don't want a character exactly like the Michael."
-                        " Instead, I want a character whose job it was to torcher humans in the "
-                        "afterlife. At one point, the character was cursed by a deity and made to "
-                        "live for a time as a heroic adventurer. The chararcter would be a "
-                        "grumbly 40-something man who is very cynical and sarcastic. He would be "
-                        "slow to help and quick to judge and mock those the party wanted to help. "
-                        "But it wouldn't come from a place of malice, but rather from a place of "
-                        "ignorance. Help me build the character based off 5e rules. I want a race, "
-                        "background. For a class I'm thinking something intelligence based either "
-                        "wizard or artificer but I'm open to suggestions. I'm also open to "
-                        "subclasses. I want to make sure the character is balanced and fun to play."
-                        " Remember that this character should be evil to start."
+            "content": ("I am trying to build a campaign around a magical school for adventurers."
+                        " The basic idea is that the school exists as a fleet of ships on the astral"
+                        " sea. Each adventuring party has a ship that they use to travel to "
+                        "different planes and discover new things. I want help fleshing out this "
+                        "idea. So far, I know that I want the headmistress to be a divination wizard"
+                        " who used to be part of an adventuring party with some of the other "
+                        "teachers. The overarching plot of the campaign is the party trying to stop "
+                        "a malevolant deity from bringing nightmare to the world as revenge for "
+                        "being forgotten. I want to know more about the school, the teachers, "
+                        "the students, and the ships. I also want to know more about the astral sea "
+                        "and the different planes that can be reached from it."
             )
         }
     ]
