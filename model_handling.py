@@ -144,13 +144,38 @@ class SolarLLM(HFLLM):
         '''Constructor for SolarLLM. Just calls the superclass constructor
         with the correct model name'''
         super().__init__("Upstage/SOLAR-10.7b-Instruct-v1.0", **kwargs)
+class ZephyrLLM(HFLLM):
+    '''LLM Subclass for the HuggingFaceH4/zephyr-7b-beta model'''
+    def __init__(self, **kwargs) -> None:
+        '''Constructor for ZephyrLLM. Just calls the superclass constructor
+        with the correct model name'''
+        super().__init__("HuggingFaceH4/zephyr-7b-beta", **kwargs)
+
+
 if __name__ == "__main__":
-    llm: LLM = SolarLLM(device_map = 'cuda:0')
+    llm: LLM = ZephyrLLM(device_map = 'auto')
     messages: List[Dict[str, str]] = [
-        {"role": "system", "content": "You are a helpful assistant."},
+        {
+            "role": "system", 
+            "content": ("You are a DnD expert who specializes in world building and"
+                        "character creation. You answer questions completely and in detail.")
+        },
         {
             "role": "user",
-            "content": "Give me an idea for a dnd character based off Michael from the Good Place."
+            "content": ("Help me create a character based on Michael from The Good Place. To"
+                        " elaborate. I don't want a character exactly like the Michael."
+                        " Instead, I want a character whose job it was to torcher humans in the "
+                        "afterlife. At one point, the character was cursed by a deity and made to "
+                        "live for a time as a heroic adventurer. The chararcter would be a "
+                        "grumbly 40-something man who is very cynical and sarcastic. He would be "
+                        "slow to help and quick to judge and mock those the party wanted to help. "
+                        "But it wouldn't come from a place of malice, but rather from a place of "
+                        "ignorance. Help me build the character based off 5e rules. I want a race, "
+                        "background. For a class I'm thinking something intelligence based either "
+                        "wizard or artificer but I'm open to suggestions. I'm also open to "
+                        "subclasses. I want to make sure the character is balanced and fun to play."
+                        " Remember that this character should be evil to start."
+            )
         }
     ]
 
